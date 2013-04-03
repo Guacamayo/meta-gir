@@ -1,0 +1,13 @@
+Index: gobject-introspection-1.34.2/giscanner/shlibs.py
+===================================================================
+--- gobject-introspection-1.34.2.orig/giscanner/shlibs.py
++++ gobject-introspection-1.34.2/giscanner/shlibs.py
+@@ -97,7 +97,7 @@ def _resolve_non_libtool(options, binary
+         if platform_system == 'Darwin':
+             args.extend(['otool', '-L', binary.args[0]])
+         else:
+-            args.extend(['ldd', binary.args[0]])
++            args.extend(['g-ir-ldd', binary.args[0]])
+         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+         patterns = {}
+         for library in libraries:

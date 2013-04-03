@@ -1,0 +1,24 @@
+#!/bin/bash
+
+export INTROSPECTION_SCANNER_ENV=
+export INTROSPECTION_SCANNER_ARGS=
+
+extraargs=""
+if [ "${GIR_EXTRA_SCANNER_ARGS:+set}" = "set" ]; then
+    extraargs="$GIR_EXTRA_SCANNER_ARGS"
+fi
+
+if [ "${GIR_EXTRA_LIBS_PATH:+set}" = "set" ]; then
+    OLDIFS=$IFS
+    IFS=:
+    for p in $GIR_EXTRA_LIBS_PATH
+    do
+	# do not append paths that do not exist, as libtool will fail
+	if [ -d $p ]; then
+	    extraargs="$extraargs --library-path=$p"
+	fi
+    done
+    IFS=$OLDIFS
+fi
+
+NATIVEROOT/usr/bin/g-ir-scanner.py EXTRA_ARGS $extraargs "$@"

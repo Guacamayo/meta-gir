@@ -1,0 +1,33 @@
+# Upstream-Status: inapropriate
+# Set up various introspection vars for further sed pre-processing
+Index: gobject-introspection-1.34.2/configure.ac
+===================================================================
+--- gobject-introspection-1.34.2.orig/configure.ac	2013-03-28 10:30:59.446977281 +0000
++++ gobject-introspection-1.34.2/configure.ac	2013-03-28 10:32:25.778646659 +0000
+@@ -247,6 +247,26 @@
+ AC_CHECK_SIZEOF(int)
+ AC_CHECK_SIZEOF(long)
+
++INTROSPECTION_VERSION=0.9.5
++GOBJECT_INTROSPECTION_CHECK([$INTROSPECTION_VERSION])
++
++if test x$found_introspection = xno; then
++	AC_MSG_ERROR([gobject-introspection is required])
++fi
++INTROSPECTION_SCANNER=`$PKG_CONFIG --variable=g_ir_scanner gobject-introspection-1.0`
++INTROSPECTION_COMPILER=`$PKG_CONFIG --variable=g_ir_compiler gobject-introspection-1.0`
++INTROSPECTION_GENERATE=`$PKG_CONFIG --variable=g_ir_generate gobject-introspection-1.0`
++INTROSPECTION_GIRDIR=`$PKG_CONFIG --variable=girdir gobject-introspection-1.0`
++INTROSPECTION_TYPELIBDIR=`$PKG_CONFIG --variable=typelibdir gobject-introspection-1.0)`
++INTROSPECTION_MAKEFILE=`$PKG_CONFIG --variable=datadir gobject-introspection-1.0`/gobject-introspection-1.0/Makefile.introspection
++AC_SUBST(INTROSPECTION_SCANNER)
++AC_SUBST(INTROSPECTION_COMPILER)
++AC_SUBST(INTROSPECTION_GENERATE)
++AC_SUBST(INTROSPECTION_GIRDIR)
++AC_SUBST(INTROSPECTION_TYPELIBDIR)
++AC_SUBST(INTROSPECTION_MAKEFILE)
++
++PKG_CHECK_MODULES(GIR, [gobject-introspection-1.0])
+ PKG_CHECK_MODULES(GIREPO, [glib-2.0 >= 2.24.0 gobject-2.0 gmodule-2.0 gio-2.0])
+
+ # if we ever remove manual check for ffi and require .pc file, then

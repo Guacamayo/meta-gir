@@ -1,0 +1,65 @@
+# Upstream-Status: inapropriate
+# Fix up python config for use of python-native and set up various pkg-config
+# vars for further sed pre-processing
+Index: gobject-introspection-1.34.2/configure.ac
+===================================================================
+--- gobject-introspection-1.34.2.orig/configure.ac	2012-11-12 20:46:42.000000000 +0000
++++ gobject-introspection-1.34.2/configure.ac	2013-03-27 16:29:36.021397472 +0000
+@@ -132,6 +132,30 @@
+ PKG_CHECK_MODULES(GIO_UNIX, [gio-unix-2.0], have_gio_unix=true, have_gio_unix=false)
+ AM_CONDITIONAL(HAVE_GIO_UNIX, test x$have_gio_unix = xtrue)
+ 
++GLIB_INCLUDEDIR=`$PKG_CONFIG --variable=includedir glib-2.0`/glib-2.0
++GLIB_LIBDIR=`$PKG_CONFIG --variable=libdir glib-2.0`
++GOBJECT_INCLUDEDIR=`$PKG_CONFIG --variable=includedir gobject-2.0`/glib-2.0
++GOBJECT_LIBDIR=`$PKG_CONFIG --variable=libdir gobject-2.0`
++GMODULE_INCLUDEDIR=`$PKG_CONFIG --variable=includedir gmodule-2.0`/glib-2.0
++GMODULE_LIBDIR=`$PKG_CONFIG --variable=libdir gmodule-2.0`
++GIO_INCLUDEDIR=`$PKG_CONFIG --variable=includedir gio-2.0`/glib-2.0
++GIO_LIBDIR=`$PKG_CONFIG --variable=libdir gio-2.0`
++GIO_UNIX_HDRS=`$PKG_CONFIG --variable=includedir gio-unix-2.0`/gio-unix-2.0/gio/*.h
++GIO_UNIX_PACKAGES="gio-unix-2.0"
++GIO_CINCLUDES="$(patsubst %,--c-include='%',$(shell echo $(GIO_UNIX_HDRS)))"
++
++AC_SUBST(GLIB_INCLUDEDIR)
++AC_SUBST(GLIB_LIBDIR)
++AC_SUBST(GOBJECT_INCLUDEDIR)
++AC_SUBST(GOBJECT_LIBDIR)
++AC_SUBST(GMODULE_INCLUDEDIR)
++AC_SUBST(GMODULE_LIBDIR)
++AC_SUBST(GIO_INCLUDEDIR)
++AC_SUBST(GIO_LIBDIR)
++AC_SUBST(GIO_UNIX_HDRS)
++AC_SUBST(GIO_UNIX_PACKAGES)
++AC_SUBST(GIO_CINCLUDES)
++
+ AC_ARG_ENABLE(tests,
+ 	AS_HELP_STRING([--disable-tests], [disable test libraries]),
+ 	enable_tests=$enableval,
+@@ -247,19 +271,13 @@
+ AC_CHECK_FUNCS([memchr strchr strspn strstr strtol strtoull])
+ AC_CHECK_FUNCS([backtrace backtrace_symbols])
+ 
+-# Python
+-AM_PATH_PYTHON([2.5])
+-case "$host" in
+-*-*-mingw*)
+-	# Change backslashes to forward slashes in pyexecdir to avoid
+-	# quoting issues
+-	pyexecdir=`echo $pyexecdir | tr '\\\\' '/'`
+-	;;
+-esac
+-AM_CHECK_PYTHON_HEADERS(, AC_MSG_ERROR([Python headers not found]))
+-if test "x$os_win32" = "xyes"; then
+-  AM_CHECK_PYTHON_LIBS(, AC_MSG_ERROR([Python libs not found. Windows requires Python modules to be explicitly linked to libpython.]))
+-fi
++PYTHON=/usr/bin/python
++AC_SUBST(PYTHON)
++
++PKG_CHECK_MODULES(PYTHON, [python])
++
++PYTHON_INCLUDES="$PYTHON_CFLAGS"
++AC_SUBST(PYTHON_INCLUDES)
+ 
+ dnl Not enabled by default until 3.6 cycle when we can propose mako as
+ dnl an external dependency

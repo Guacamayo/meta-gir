@@ -1,0 +1,48 @@
+#!/bin/bash
+args=()
+
+i="1"
+first=$1
+shift
+
+# construct an argument array without the last argument
+for a in "$@"
+do
+    if [ $i -le $# ]; then
+	args+=("$a")
+	i=$((i + 1))
+    fi
+done
+
+# check whether the file pointed to by the last argument starts with hasbang --
+# if so, assume it is a libtool script and inject /.libs/ into the parameter to
+# point at something that is a real elf and also add ./.libs to library path,
+# since that's where the lib is likely to be
+s=""
+read s < $first
+b=${s:0:2}
+
+extrapath=""
+
+if [ "$b" = "#!" ]; then
+    sfx=${first##*/}
+    pfx=${first%/*}
+    first="$pfx/.libs/$sfx"
+    extrapath=":./.libs"
+fi
+
+if [ "${GIR_EXTRA_LIBS_PATH:+set}" = "set" ]; then
+    extrapath="$extrapath:$GIR_EXTRA_LIBS_PATH"
+fi
+
+extraargs=""
+if [ "${GIR_EXTRA_RUNME_ARGS:+set}" = "set" ]; then
+    extraargs="$GIR_EXTRA_RUNME_ARGS"
+fi
+
+echo "Extra paths: $extrapath"
+
+echo "Arguments are: $first" "${args[@]}"
+PSEUDO_UNLOAD=1 qemuwrapper SYSROOT/$(readelf -l "$first" |\
+	grep "Requesting program interpreter"|sed -e 's/^.*\[.*: \(.*\)\]/\1/')\
+        --library-path SYSROOT/lib:SYSROOT/usr/lib$extrapath "$first" $extraargs "${args[@]}"

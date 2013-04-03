@@ -1,0 +1,59 @@
+Index: gobject-introspection-1.34.2/Makefile.am
+===================================================================
+--- gobject-introspection-1.34.2.orig/Makefile.am	2013-03-27 16:08:36.230670707 +0000
++++ gobject-introspection-1.34.2/Makefile.am	2013-03-27 16:08:36.394670044 +0000
+@@ -18,14 +18,12 @@
+ include Makefile-cmph.am
+ include Makefile-girepository.am
+ include Makefile-giscanner.am
+-include Makefile-examples.am
+-include Makefile-gir.am
+ include Makefile-tools.am
+ 
+ ## Process this file with automake to produce Makefile.in
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+ 
+-SUBDIRS = . docs tests
++SUBDIRS = .
+ 
+ DIST_SUBDIRS = m4 $(SUBDIRS)
+ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+Index: gobject-introspection-1.34.2/Makefile-tools.am
+===================================================================
+--- gobject-introspection-1.34.2.orig/Makefile-tools.am	2012-02-21 15:43:45.000000000 +0000
++++ gobject-introspection-1.34.2/Makefile-tools.am	2013-03-27 16:10:33.618196052 +0000
+@@ -1,9 +1,4 @@
+ bin_PROGRAMS += g-ir-compiler g-ir-generate
+-bin_SCRIPTS += g-ir-scanner g-ir-annotation-tool
+-
+-if BUILD_DOCTOOL
+-bin_SCRIPTS += g-ir-doc-tool
+-endif
+ 
+ EXTRA_DIST += 				\
+ 	tools/g-ir-scanner.in 		\
+@@ -12,18 +7,6 @@
+ 
+ TOOL_SUBSTITUTIONS = sed -e s,@libdir\@,$(libdir), -e s,@datarootdir\@,$(datarootdir), -e s,@PYTHON\@,$(PYTHON),
+ 
+-g-ir-scanner: tools/g-ir-scanner.in _giscanner.la Makefile
+-	$(AM_V_GEN) $(TOOL_SUBSTITUTIONS) $< > $@.tmp && mv $@.tmp $@
+-	@chmod a+x $@
+-
+-g-ir-annotation-tool: tools/g-ir-annotation-tool.in _giscanner.la Makefile
+-	$(AM_V_GEN) $(TOOL_SUBSTITUTIONS) $< > $@.tmp && mv $@.tmp $@
+-	@chmod a+x $@
+-
+-g-ir-doc-tool: tools/g-ir-doc-tool.in _giscanner.la Makefile
+-	$(AM_V_GEN) $(TOOL_SUBSTITUTIONS) $< > $@.tmp && mv $@.tmp $@
+-	@chmod a+x $@
+-
+ g_ir_compiler_SOURCES = tools/compiler.c
+ g_ir_compiler_CPPFLAGS = -DGIREPO_DEFAULT_SEARCH_PATH="\"$(libdir)\"" \
+ 			 -I$(top_srcdir)/girepository
+@@ -45,5 +28,3 @@
+ GCOVSOURCES =					\
+ 	$(g_ir_compiler_SOURCES)		\
+ 	$(g_ir_generate_SOURCES)
+-
+-CLEANFILES += g-ir-scanner g-ir-annotation-tool g-ir-doc-tool

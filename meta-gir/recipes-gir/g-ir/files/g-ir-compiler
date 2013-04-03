@@ -1,0 +1,15 @@
+#!/bin/bash
+
+extraargs=""
+if [ "${GIR_EXTRA_COMPILER_ARGS:+set}" = "set" ]; then
+    extraargs="$GIR_EXTRA_COMPILER_ARGS"
+fi
+
+extrapath=""
+if [ "${GIR_EXTRA_LIBS_PATH:+set}" = "set" ]; then
+    extrapath=":$GIR_EXTRA_LIBS_PATH"
+fi
+
+PSEUDO_UNLOAD=1 qemuwrapper SYSROOT/$(readelf -l NATIVEBINDIR/XXXX |\
+	grep "Requesting program interpreter"|sed -e 's/^.*\[.*: \(.*\)\]/\1/')\
+        --library-path SYSROOT/lib:SYSROOT/usr/lib$extrapath NATIVEBINDIR/XXXX EXTRA_COMP_ARGS $extraargs "$@"
