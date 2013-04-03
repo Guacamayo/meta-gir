@@ -1,0 +1,3 @@
+
+inherit g-ir
+
