@@ -1,0 +1,56 @@
+Index: pygobject-3.0.4/configure.ac
+===================================================================
+--- pygobject-3.0.4.orig/configure.ac	2012-02-09 08:55:44.000000000 +0000
++++ pygobject-3.0.4/configure.ac	2013-04-03 20:14:02.056262270 +0100
+@@ -101,24 +101,15 @@
+ 			  [AC_MSG_ERROR(too old)])
+ fi
+ 
+-AM_CHECK_PYTHON_HEADERS(, AC_MSG_ERROR([Python headers not found]))
+-if test "x$os_win32" = "xyes"; then
+-  AM_CHECK_PYTHON_LIBS(, AC_MSG_ERROR([Python libs not found. Windows requires Python modules to be explicitly linked to libpython.]))
+-fi
++PYTHON=/usr/bin/python
++AC_SUBST(PYTHON)
++
++PKG_CHECK_MODULES(PYTHON, [python])
+ 
+-AC_MSG_CHECKING([for PySignal_SetWakeupFd in Python.h])
+-old_CPPFLAGS=$CPPFLAGS
+-CPPFLAGS="-Wall -Werror $PYTHON_INCLUDES"
+-AC_TRY_COMPILE([#include <Python.h>],
+-  [PySignal_SetWakeupFd(0);],
+-  setwakeupfd_ok=yes,
+-  setwakeupfd_ok=no)
+-AC_MSG_RESULT($setwakeupfd_ok)
+-if test "x$setwakeupfd_ok" != xno; then
++PYTHON_INCLUDES="$PYTHON_CFLAGS"
++AC_SUBST(PYTHON_INCLUDES)
+   AC_DEFINE(HAVE_PYSIGNAL_SETWAKEUPFD, 1,
+                 [Define to 1 if PySignal_SetWakeupFd is available])
+-fi
+-CPPFLAGS=$old_CPPFLAGS
+ 
+ PLATFORM=`$PYTHON -c "import sys; from distutils import util; sys.stdout.write(util.get_platform())"`
+ AC_SUBST(PLATFORM)
+@@ -195,6 +186,7 @@
+     gobject-introspection-1.0 >= introspection_required_version
+ )
+ 
++GOBJECT_INTROSPECTION_CHECK(introspection_required_version)
+ GI_DATADIR=$($PKG_CONFIG --variable=gidatadir gobject-introspection-1.0)
+ AC_SUBST(GI_DATADIR)
+ 
+@@ -211,12 +203,6 @@
+ fi
+ AM_CONDITIONAL(ENABLE_CAIRO, test "$enable_cairo" = "yes")
+ 
+-INTROSPECTION_SCANNER=`$PKG_CONFIG --variable=g_ir_scanner gobject-introspection-1.0`
+-INTROSPECTION_COMPILER=`$PKG_CONFIG --variable=g_ir_compiler gobject-introspection-1.0`
+-
+-AC_SUBST(INTROSPECTION_SCANNER)
+-AC_SUBST(INTROSPECTION_COMPILER)
+-
+ dnl add required cflags ...
+ if test "x$GCC" = "xyes"; then
+   JH_ADD_CFLAG([-Wall])
