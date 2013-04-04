@@ -83,11 +83,11 @@ the offending file, or a patch (e.g., the pango and gst-plugins bbappends).
 For ease of tweaking the g-i parameters, the following configuration variables
 (with self-documenting names ;-) ) can be set in the recipes:
 
-  GIR_EXTRA_LIBS_PATH
-  GIR_EXTRA_COMPILER_ARGS
-  GIR_EXTRA_GENERATE_ARGS
-  GIR_EXTRA_RUNME_ARGS
-  GIR_EXTRA_SCANNER_ARGS
+  * GIR_EXTRA_LIBS_PATH
+  * GIR_EXTRA_COMPILER_ARGS
+  * GIR_EXTRA_GENERATE_ARGS
+  * GIR_EXTRA_RUNME_ARGS
+  * GIR_EXTRA_SCANNER_ARGS
 
 Of these, the first one is most often needed (and holds the usual, colon
 separated, extra path to be used by the tools when resolving shared libs).
