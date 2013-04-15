@@ -8,20 +8,19 @@ Introduction
 
 G-I is not an easy technology to support in a cross-compiling environment, as is
 attested by the fact that even though g-i has been around for years, Yocto / OE
-support is still missing. There are reasons for this: the technology per se
-cross-compilation unfriendly by design (i.e., g-i typelib is a raw dump of a C
-struct), the tools are even more so, particularly the scanner (written in
-Python, but using a custom python module, executing C compiler, ldd, and the
-compiled product), and, to add an extra bit of spice, a single repository and
-build system combining the tools, the consumer library and collection of
-typelibs.
+support is still missing. There are reasons for this: the technology per se is
+cross-compilation unfriendly (i.e., g-i typelib is a raw dump of a C struct),
+the tools are even more so, particularly the scanner (written in Python, but
+using a custom python module, executing C compiler, ldd, and the compiled
+product), and, to add an extra bit of spice, a single repository and build
+system combining the tools, the consumer library and collection of typelibs.
 
 The approach taken here is to use Qemu to allow running the tools in their
 target environment, which, in spite of the obvious limitation (Qemu does not
 support architecture XYZ I hear you say!), is the only viable approach at the
 moment (other options, such as using IDL, have been discussed over the years,
-but came to nought). Both gir and typelib generation is done on target; in
-principle the former could be done natively, but that would required building
+but came to nought). Both gir and typelib generation is done under Qemu; in
+principle the former could be done natively, but that would require building
 far too many packages in their full native form, which is undesirable.
 
 In order to work around the 'lump it all together' setup of the upstream
@@ -39,16 +38,16 @@ four different sets of patches and configuration:
                       g-ir-annotation-tool, built for execution on the host. The
                       'native' designation is a half truth, the scanner runs the
                       C cross-compiler, uses ldd on the compilation product,
-                      which it then executes. These steps are facilitated via
-                      Qemu and a set of wrapper scripts (which are, however,
+                      which it then executes. These steps are again facilitated
+                      via Qemu and a set of wrapper scripts (which are, however,
                       provided by the next package).
 
  * g-ir-tools-host:   Provides the two C-based tools, g-ir-compiler and
                       g-ir-generate, built for the target, but, together with a
                       bunch of Qemu wrapper scripts staged into the native
-                      multi-machine bin directory, for these are intended solely
-                      for build-time execution on the host, even though built
-                      for target.
+                      multi-machine bin directory, since these are intended
+                      solely for build-time execution on the host, even though
+                      built for target.
 
 
 Layer Organisation
@@ -71,9 +70,9 @@ Enabling g-i in packages
 ------------------------
 
 Package enabling is facilitated by the g-ir.bbclass. For simple and sensibly set
-up upstream projects (e.g., the libsoup-2.4 bbappend), all that is required is
-to inherit g-ir.  For more complex projects, that build multiple libraries in
-different sub directories of their tree, it is also necessary to set up the
+up upstream projects all that is required is to inherit g-ir (e.g., the
+libsoup-2.4 bbappend). For more complex projects, that build multiple libraries
+in different sub directories of their tree, it is also necessary to set up the
 library loading paths (e.g., the gtk+3 bbappend). Some packages ship their own
 version of the introspection autoconf macros; the g-ir class takes care of the
 common case where the project contains m4/introspection.m4, but packages that
