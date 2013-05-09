@@ -62,8 +62,13 @@ pick and choose as required:
 * meta-gir-core:  bbappends that enable g-i for packages that are part of
                   oecore,
 
-* meta-gir-extra: bbappends that enable g-i for packages that are part of
+* meta-gir-gnome: bbappends that enable g-i for packages that are part of
                   meta-gnome.
+                  (http://layers.openembedded.org/layerindex/layer/meta-gnome/)
+
+* meta-gir-clutter: bbappends that enable g-i for packages that are part of
+                  meta-clutter.
+		  (https://github.com/Guacamayo/meta-clutter)
 
 
 Enabling g-i in packages
