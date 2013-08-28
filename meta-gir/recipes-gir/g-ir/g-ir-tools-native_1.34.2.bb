@@ -19,7 +19,11 @@ SCANNER_ARGS = "--library-path=${STAGING_DIR_HOST}${libdir}"
 do_install_append () {
     rm ${D}${libdir}/gobject-introspection/giscanner/*.la
     rm ${D}${libdir}/gobject-introspection/giscanner/*.a
+
+    # These files are provided by gtk-doc-stub-native, and we only want the
+    # stubs for native packages, so do not try to replace them
     rm -rf ${D}${datadir}/aclocal
+    rm ${D}${datadir}/gobject-introspection-1.0/Makefile.introspection
 
     install -d ${D}${datadir}/gobject-introspection-1.0
     install ${S}/girepository/gdump.c ${D}${datadir}/gobject-introspection-1.0/
