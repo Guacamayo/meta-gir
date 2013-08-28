@@ -1,0 +1,20 @@
+# This patch removes extraneous library path from the g-ir-scanner arguments
+# As the libdir is the standard ${libdir} on the system in this case, extra
+# this argument is not needed, and the PKGCONFIG call results in /usr/lib being
+# returned.
+#
+# Signed-off-by: Tomas Frydrych <tomas@sleepfive.com>
+# Upstream-status: inapropriate
+
+Index: gst-plugins-base-0.10.36/gst-libs/gst/pbutils/Makefile.am
+===================================================================
+--- gst-plugins-base-0.10.36.orig/gst-libs/gst/pbutils/Makefile.am	2013-08-28 12:49:15.104406462 +0100
++++ gst-plugins-base-0.10.36/gst-libs/gst/pbutils/Makefile.am	2013-08-28 13:03:25.009548424 +0100
+@@ -83,7 +83,6 @@
+ 		-I$(top_builddir)/gst-libs \
+ 		--add-include-path=`$(PKG_CONFIG) --variable=girdir gstreamer-@GST_MAJORMINOR@` \
+ 		--library=libgstpbutils-@GST_MAJORMINOR@.la \
+-		--library-path=`$(PKG_CONFIG) --variable=libdir gstreamer-@GST_MAJORMINOR@` \
+ 		--library=gstreamer-@GST_MAJORMINOR@ \
+ 		--include=Gst-@GST_MAJORMINOR@ \
+ 		--libtool="$(LIBTOOL)" \
