@@ -96,6 +96,14 @@ For ease of tweaking the g-i parameters, the following configuration variables
 Of these, the first one is most often needed (and holds the usual, colon
 separated, extra path to be used by the tools when resolving shared libs).
 
+If you wish to add gir packages to an image via EXTRA_IMAGE_FEATURES, you need
+to define the complementary glob somewhere suitable:
+
+   COMPLEMENTARY_GLOB[gir-pkgs] = '*-gir'
+
+You can then use 'gir-pkgs' as a standard image feature, and you will almost
+certainly want to add 'gir-pkgs' to SDKIMAGE_FEATURES as well.
+
 
 TODO
 ----
@@ -107,11 +115,6 @@ the whole of the Gnome 3 Desktop environment.
 
 Known Issues
 ------------
-
- * Since it is currently impossible to extend the supported package sets, a
-   small patch is needed for oecore image.bbclass to add the new gir-pkgs. This
-   is located in the oecore-patches directory, and will hopefully be upstreamed
-   at some point.
 
  * The scripts expect bash; if anybody feels strong enough about rewriting them,
    there is a free line awaiting in the AUTHORS file ...
