@@ -1,5 +1,5 @@
 SUMMARY = "GObject Introspection Tools"
-DESCRIPTION = "This package provides the tools for GObject introspection"
+DESCRIPTION = "This package provides the girs and typelibs that are part of the GIR project."
 
 DEPENDS += "glib-2.0"
 
