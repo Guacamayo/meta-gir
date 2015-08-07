@@ -29,4 +29,4 @@ do_configure_prepend () {
         ${S}/configure.ac
 }
 
-export GIR_EXTRA_COMPILER_ARGS = "--includedir=./gir"
+export GIR_EXTRA_COMPILER_ARGS = "--includedir=${S}/gir"
