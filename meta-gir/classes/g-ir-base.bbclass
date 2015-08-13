@@ -7,3 +7,5 @@ FILES_${PN}-dev += "${datadir}/gir-1.0/*.gir"
 
 EXTRA_OECONF_append_class-target = " --enable-introspection"
 EXTRA_OECONF_append_class-native = " --disable-introspection"
+
+EXTRANATIVEPATH_prepend = "${PACKAGE_ARCH}${HOST_VENDOR}-${HOST_OS}"

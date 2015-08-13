@@ -10,6 +10,7 @@ PACKAGES += "${PN}-lib"
 SRCNAME="pygobject"
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz \
 	   file://fix-configure.patch \
+	   file://fix-tests.patch \
 	  "
 SRC_URI[md5sum] = "0cbcda00d9276f78040d361d1611a6a0"
 SRC_URI[sha256sum] = "f457b1d7f6b8bfa727593c3696d2b405da66b4a8d34cd7d3362ebda1221f0661"
